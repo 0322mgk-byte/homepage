@@ -1,6 +1,33 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextRequest, NextResponse } from 'next/server'
 
+// 구글 시트에 대화 기록 저장
+async function logToGoogleSheet(userMessage: string, aiResponse: string, ipAddress: string, userAgent: string) {
+  const chatbotLoggerUrl = process.env.CHATBOT_LOGGER_URL
+
+  if (!chatbotLoggerUrl || chatbotLoggerUrl === 'YOUR_CHATBOT_SCRIPT_URL_HERE') {
+    console.log('Chatbot logger URL not configured')
+    return
+  }
+
+  try {
+    await fetch(chatbotLoggerUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userMessage,
+        aiResponse,
+        ipAddress,
+        userAgent,
+      }),
+    })
+  } catch (error) {
+    console.error('Failed to log to Google Sheets:', error)
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { message, history } = await request.json()
@@ -49,6 +76,11 @@ export async function POST(request: NextRequest) {
     const result = await model.generateContent(systemPrompt)
     const response = await result.response
     const text = response.text()
+
+    // 구글 시트에 대화 기록 저장 (비동기, 응답에 영향 없음)
+    const ipAddress = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    const userAgent = request.headers.get('user-agent') || 'unknown'
+    logToGoogleSheet(message, text, ipAddress, userAgent).catch(console.error)
 
     return NextResponse.json({ message: text })
   } catch (error) {
