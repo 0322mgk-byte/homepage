@@ -28,6 +28,13 @@ export default function Form() {
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      interest: '',
+      kakaoConsent: false,
+    },
   })
 
   const onSubmit = async (data: FormData) => {
