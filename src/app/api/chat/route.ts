@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
     // System instruction for the chatbot
     const systemInstruction = `당신은 "돈버는 글쓰기 무료 비밀특강"의 친절한 AI 어시스턴트입니다.
