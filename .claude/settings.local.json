@@ -15,7 +15,12 @@
       "Bash(npx shadcn@latest add:*)",
       "Bash(npm i:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(vercel --version:*)",
+      "Bash(vercel login)",
+      "Bash(vercel:*)"
     ],
     "deny": [],
     "ask": []
