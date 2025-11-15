@@ -20,7 +20,9 @@
       "Bash(git config:*)",
       "Bash(vercel --version:*)",
       "Bash(vercel login)",
-      "Bash(vercel:*)"
+      "Bash(vercel:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
