@@ -21,9 +21,10 @@ export async function POST(request: NextRequest) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      systemInstruction: `당신은 "돈버는 글쓰기 무료 비밀특강"의 친절한 AI 어시스턴트입니다.
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+
+    // System instruction as first message
+    const systemPrompt = `당신은 "돈버는 글쓰기 무료 비밀특강"의 친절한 AI 어시스턴트입니다.
 
 주요 역할:
 - 특강에 대한 궁금한 점을 상세히 안내합니다
@@ -39,24 +40,13 @@ export async function POST(request: NextRequest) {
 - 친근하고 따뜻한 톤으로 대화합니다
 - 간결하고 명확하게 답변합니다
 - 질문자의 관심사를 파악하고 맞춤형 조언을 제공합니다
-- 항상 긍정적이고 격려하는 태도를 유지합니다`
-    })
+- 항상 긍정적이고 격려하는 태도를 유지합니다
 
-    // Build chat history for context
-    const chatHistory = history?.map((msg: { role: string; content: string }) => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.content }],
-    })) || []
+사용자 질문: ${message}
 
-    const chat = model.startChat({
-      history: chatHistory,
-      generationConfig: {
-        maxOutputTokens: 1000,
-        temperature: 0.7,
-      },
-    })
+답변:`
 
-    const result = await chat.sendMessage(message)
+    const result = await model.generateContent(systemPrompt)
     const response = await result.response
     const text = response.text()
 
