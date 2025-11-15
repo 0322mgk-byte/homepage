@@ -12,7 +12,7 @@ const formSchema = z.object({
   email: z.string().email('올바른 이메일 주소를 입력해주세요'),
   phone: z.string().regex(/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/, '올바른 휴대폰 번호를 입력해주세요'),
   interest: z.string().optional(),
-  kakaoConsent: z.boolean().optional().default(false),
+  kakaoConsent: z.coerce.boolean(),
 })
 
 type FormData = z.infer<typeof formSchema>
